@@ -32,6 +32,23 @@ app.use('/book', bookroute);
 
 app.use('/', loginroute);
 
+require('dotenv').config();
+  
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+
+// Example query
+pool.query('SELECT NOW()', (err, res) => {
+  if (err) {
+    console.error('Error executing query', err.stack);
+  } else {
+    console.log('Database connected:', res.rows);
+  }
+});
+
+
 // No need to set up express.static again here
 
 // catch 404 and forward to error handler
