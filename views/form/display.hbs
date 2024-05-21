@@ -1,0 +1,59 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Page</title>
+    <!-- Include any CSS or scripts needed for the page -->
+    <style>
+        .card {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    </head>
+    <body>
+    <h1>Search Page</h1>
+    <div id="dataContainer">
+        <!-- Data will be dynamically inserted here -->
+    </div>
+
+    <script>
+        // Fetch data from the server
+        fetch('/book/display')
+        .then(response => response.json())
+        .then(data => {
+            const dataContainer = document.getElementById('dataContainer');
+
+            if (data.length > 0) {
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                
+                // Assuming 'name' and 'description' are properties of each item
+                const nameElement = document.createElement('h3');
+                nameElement.textContent = item.name;
+                card.appendChild(nameElement);
+                
+                const descriptionElement = document.createElement('p');
+                descriptionElement.textContent = item.description;
+                card.appendChild(descriptionElement);
+                
+                // Append card to the container
+                dataContainer.appendChild(card);
+            });
+            } else {
+            // No data available
+            dataContainer.innerHTML = '<p>No data available</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Failed to retrieve data:', error);
+            //document.getElementById('dataContainer').innerHTML = '<p>Failed to retrieve data</p>';
+        });
+    </script>
+    </body>
+    </html>

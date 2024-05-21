@@ -1,0 +1,173 @@
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+
+    <a class="navbar-brand" href="javascript:void(0)">Logo</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mynavbar">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="../search">Admin</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="../products">Add book</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="../products/{{books.id}}">My books list</a>
+        </li>
+        
+         <li class="nav-item">
+          <a class="nav-link" href="../my_books">All books</a>
+        </li>
+      </ul> 
+      <form class="d-flex" action="/login" method="get">
+        <button class="btn btn-primary" type="submit">Log Out</button>
+      </form>
+      <form class="d-flex" action="/book/search" method="post">
+        
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" style="margin: 0px 10px 0px 10px;">profile</button>
+      </form>
+      {{#if user}}
+      <div class="modal" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+      
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">PROFILE</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+      
+            <!-- Modal body -->
+            <div class="modal-body">
+                <label>name : {{user.name}} </label>
+                <br>
+                <label>age : {{user.age}} </label>
+                <br>
+                <label>mail : {{user.mail}} </label>
+            </div>
+      
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+      
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+
+</nav>
+
+<main>
+   <table class="container">
+	<thead>
+		<tr>
+			<th>Student Id</th>
+            <th>Student Name</th>
+            <th>Student Age</th>
+            <th>Student Mail Id</th>
+            <th></th>
+		</tr>
+	</thead>
+	<tbody>
+    {{#each students}}
+		<tr>
+			<td>{{this.id}}</td>
+			<td>{{this.name}}</td>
+			<td>{{this.age}}</td>
+			<td>{{this.mail}}</td>
+      <td>
+        <form action="/search/{{this.name}}" method="post">
+          <button type="submit" class="btn btn-primary">Delete</button>
+        </form>
+      </td>
+		</tr>
+    {{/each }}
+		
+	</tbody>
+</table>
+</main>
+<style>
+  main
+  {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: #fff;
+  }
+.container th h1 {
+	  font-weight: bold;
+	  font-size: 1em;
+  text-align: left;
+  color: #185875;
+  
+}
+
+.container td {
+	  font-weight: normal;
+	  font-size: 1em;
+  -webkit-box-shadow: 0 2px 2px -2px #0E1119;
+	   -moz-box-shadow: 0 2px 2px -2px #0E1119;
+	        box-shadow: 0 2px 2px -2px #0E1119;
+}
+
+.container {
+	  text-align: left;
+	  overflow: hidden;
+	  width: 80%;
+	  margin: 0 auto;
+  display: table;
+  margin-top: 20px;
+  padding: 0 0 8em 0;
+}
+
+.container td, .container th {
+	  padding-bottom: 2%;
+	  padding-top: 2%;
+  padding-left:2%;  
+}
+
+/* Background-color of the odd rows */
+.container tr:nth-child(odd) {
+	  background-color: #323C50;
+}
+
+/* Background-color of the even rows */
+.container tr:nth-child(even) {
+	  background-color: #2C3446;
+}
+
+.container th {
+	  background-color: #1F2739;
+}
+
+.container td:first-child { color: #FB667A; }
+
+.container tr:hover {
+   background-color: #464A52;
+-webkit-box-shadow: 0 6px 6px -6px #0E1119;
+	   -moz-box-shadow: 0 6px 6px -6px #0E1119;
+	        box-shadow: 0 6px 6px -6px #0E1119;
+}
+
+.container td:hover {
+  background-color: #FFF842;
+  color: #403E10;
+  font-weight: bold;
+  
+  box-shadow: #7F7C21 -1px 1px, #7F7C21 -2px 2px, #7F7C21 -3px 3px, #7F7C21 -4px 4px, #7F7C21 -5px 5px, #7F7C21 -6px 6px;
+  transform: translate3d(6px, -6px, 0);
+  
+  transition-delay: 0s;
+	  transition-duration: 0.4s;
+	  transition-property: all;
+  transition-timing-function: line;
+}
+
+@media (max-width: 800px) {
+.container td:nth-child(4),
+.container th:nth-child(4) { display: none; }
+}</style>
