@@ -3,11 +3,10 @@ const { Client } = require('pg');
 class Database {
   constructor() {
     this.client = new Client({
-      user: 'postgres',
-      host: 'localhost',
-      database: 'first',
-      password: '2003',
-      port: 5432, // Default PostgreSQL port
+      connectionString: 'postgres://first_89xq_user:JMqxDgAJBY4AoPE3LEpnZMlPRizMWm6F@dpg-cp86d5e74orc73dcf5j0-a.oregon-postgres.render.com/first_89xq',
+      ssl: {
+        rejectUnauthorized: false
+      }
     });
   }
 
@@ -19,6 +18,17 @@ class Database {
       console.error('Error connecting to PostgreSQL:', err);
     }
   }
+  
+  async query(text, params) {
+    try {
+      const res = await this.client.query(text, params);
+      return res;
+    } catch (err) {
+      console.error('Error executing query:', err);
+      throw err;
+    }
+  }
+
 
   async disconnect() {
     try {
