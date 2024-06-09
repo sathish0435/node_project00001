@@ -148,7 +148,7 @@ router.post('/search', async (req, res) => {
       console.log('User stored in session:', req.session.user); // Debug log
       res.render('pages/search',{ students: students,  user: user });
     } else {
-      res.render('pages/login', { error: 'Invalid username or password' });
+      res.redirect('pages/login', { error: 'Invalid username or password' });
     }
   } catch (err) {
     console.error(err);
