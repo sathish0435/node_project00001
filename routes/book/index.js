@@ -25,7 +25,7 @@ router.get('/my_books', function(req, res, next) {
 
 
 // Create a new instance of the Database class
-const db = new rbooks();
+  const db = new rbooks();
 
 router.use(bodyParser.json());
 

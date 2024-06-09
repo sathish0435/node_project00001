@@ -18,7 +18,10 @@ const authenticateUser = (req, res, next) => {
 
 // Login route
 router.get('/login', (req, res) => {
-  res.render('pages/login');
+  res.render('pages/login',{ layout: 'login-layout' });
+});
+router.get('/', (req, res) => {
+  res.render('index',{ layout: 'login-layout' });
 });
 router.get('/products', (req, res) => {
   res.render('pages/products');
@@ -45,16 +48,26 @@ router.post('/products', async (req, res) => {
 //     res.status(500).send('Internal Server Error');
 //   }
 // });
-  router.get('/products/:studentId', async (req, res) => {
-    const { studentId } = req.params;
+  router.get('/my_books' , async (req, res) => {
+    const studentId = req.session.user.id;
     try {
       // Fetch both student details and book details by studentId
-      const [studentDetails, books] = await Promise.all([
-        db.getStudentById(studentId),
-        db.getBooksByStudentId(studentId)
-      ]);
-      // Render the HTML template with both student and book details
+      if(studentId)
+        {
+          console.log("it was render");
+          const [studentDetails, books] = await Promise.all([
+
+            db.getStudentById(studentId),
+            db.getBooksByStudentId(studentId)
+            
+            
+          ]);
+           // Render the HTML template with both student and book details
       res.render('pages/my_books', { studentId: studentId, ...studentDetails, books: books });
+        }
+
+      
+     
     } catch (err) {
       console.error(err);
       res.status(500).send('Internal Server Error');
@@ -113,10 +126,10 @@ router.get('/search', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-router.get('/my_books', async (req, res) => {
+router.get('/all_books', async (req, res) => {
   try {
-    const books = await db.getAllbooks();
-    res.render('pages/my_books', { books: books });
+    const Books = await db.getAllbooks();
+    res.render('pages/all_books', { Books: Books });
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal Server Error');
@@ -131,7 +144,8 @@ router.post('/search', async (req, res) => {
   
     if (user) {
       // User authenticated
-      
+      req.session.user = user
+      console.log('User stored in session:', req.session.user); // Debug log
       res.render('pages/search',{ students: students,  user: user });
     } else {
       res.render('pages/login', { error: 'Invalid username or password' });
@@ -142,6 +156,11 @@ router.post('/search', async (req, res) => {
   }
 });
 
+
+router.use((req, res, next) => {
+  console.log('Session data:', req.session);
+  next();
+});
 
 
 module.exports = router;

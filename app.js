@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+const session = require('express-session');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -12,6 +13,25 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+
+
+app.use(session({
+  secret: 'aossfarfeufhefliauefn', // Change this to a strong secret
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true if using HTTPS
+}));
+
+// Middleware to make session available in templates
+app.use((req, res, next) => {
+  res.locals.user = req.session.user;
+  next();
+});
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -31,23 +51,6 @@ app.use('/', indexRouter);
 app.use('/book', bookroute);
 
 app.use('/', loginroute);
-
-require('dotenv').config();
-  
-const { Pool } = require('pg');
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-
-// Example query
-pool.query('SELECT NOW()', (err, res) => {
-  if (err) {
-    console.error('Error executing query', err.stack);
-  } else {
-    console.log('Database connected:', res.rows);
-  }
-});
-
 
 // No need to set up express.static again here
 

@@ -3,13 +3,10 @@ const bodyParser = require('body-parser');
 var login = express.Router();
 const rbooks = require('..//model/book');
 
-login.get('/', (req, res) => {
-    res.render('pages/login');
-});
+
 login.get('/login', (req, res) => {
     res.render('pages/login');
 });
-
 
 login.post('/login', async (req, res) => {
     const { username, password } = req.body;

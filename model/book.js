@@ -1,5 +1,7 @@
 const { Client } = require('pg');
 
+
+
 class Database {
   constructor() {
     this.client = new Client({
@@ -8,6 +10,7 @@ class Database {
         rejectUnauthorized: false
       }
     });
+
   }
 
   async connect() {
@@ -18,17 +21,6 @@ class Database {
       console.error('Error connecting to PostgreSQL:', err);
     }
   }
-  
-  async query(text, params) {
-    try {
-      const res = await this.client.query(text, params);
-      return res;
-    } catch (err) {
-      console.error('Error executing query:', err);
-      throw err;
-    }
-  }
-
 
   async disconnect() {
     try {
@@ -50,6 +42,19 @@ class Database {
       console.error('Error inserting data:', err);
     }
   }
+  async ensureAuthenticated(req, res, next) {
+    try {
+      if (req.session.user) {
+        next();
+      } else {
+        res.redirect('/login');
+      }
+    } catch (err) {
+      console.error('Error checking authentication:', err);
+      res.status(500).send('Internal Server Error');
+    }
+  }
+
   async getAllStudents() {
     try {
       const query = 'SELECT * FROM student';
@@ -68,9 +73,9 @@ class Database {
     try {
       const query = 'SELECT * FROM book';
       const result = await this.client.query(query);
-      const books = result.rows;
-      console.log('All book:', books); // Print all students to console
-      return books;
+      const Books = result.rows;
+      console.log('All book:', Books); // Print all students to console
+      return Books;
     } catch (err) {
       console.error('Error retrieving students:', err);
       throw err;
@@ -82,13 +87,17 @@ class Database {
       const query = 'SELECT * FROM student WHERE name = $1 AND age = $2';
       const values = [name, age];
       const result = await this.client.query(query, values);
-      const user = result.rows[0]; // Assuming you expect only one user, so taking the first row
-      return user; // Return the user object if found, otherwise null
+      if (result.rows.length > 0) {
+        return result.rows[0]; // Return the first user found
+      } else {
+        return null; // No user found
+      }
     } catch (err) {
       console.error('Error fetching user:', err.message);
       throw err;
     }
   }
+
   
  
   async insertBook(studentId, bookTitle, bookAuthor ,image_link,genre) {
