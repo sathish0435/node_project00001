@@ -5,7 +5,7 @@ const { Client } = require('pg');
 class Database {
   constructor() {
     this.client = new Client({
-      connectionString: 'postgres://first_89xq_user:JMqxDgAJBY4AoPE3LEpnZMlPRizMWm6F@dpg-cp86d5e74orc73dcf5j0-a.oregon-postgres.render.com/first_89xq',
+      connectionString: 'postgresql://first_x63s_user:2cQUtFBS1A0ZyFLzcy9UPgRyraOoYnoL@dpg-cpv9v35umphs73c8qsp0-a.oregon-postgres.render.com/first_x63s',
       ssl: {
         rejectUnauthorized: false
       }
